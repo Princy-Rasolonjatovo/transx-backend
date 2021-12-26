@@ -1,0 +1,4 @@
+bin/*
+obj/Debug/*
+bin/Debug/net5.0/Microsoft.OpenApi.dll
+*.cache
