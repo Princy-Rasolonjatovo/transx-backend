@@ -1,6 +1,7 @@
 
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -92,5 +93,52 @@ namespace transx.Controllers
             }
         }
 
+        [HttpPut("{username: string}")]
+        public async Task<ActionResult> UpdateCustomer(string username, UpdatedCustomerDTO customerDTO){
+            var customer = await this.repository.GetCustomerByLoginName(username);
+            
+            if (customer is null){
+                return NotFound();
+            }
+
+            StringBuilder password = new StringBuilder();
+            // update password
+            if (customerDTO.NewPassword.Length > 0){
+                if (!(customer.LoginPassword == PasswordHash.StringHash(customerDTO.Password))){
+                    ModelState.AddModelError("Password", "Wrong Password, verify your password");
+                    return BadRequest(ModelState);
+                }else{
+                    password.Append(PasswordHash.StringHash(customerDTO.NewPassword));
+                }
+            }else{
+                password.Append(customer.LoginPassword);
+            }
+            
+            
+            Customer updatedCustomer = new Customer(){
+                Id = customer.Id,
+                OrganisationName = customerDTO.Organisation,
+                OrganisationOrPerson = customerDTO.OrganisationOrPerson,
+                Gender = customerDTO.Gender,
+                FirstName = customerDTO.FirstName,
+                MiddleName = customerDTO.MiddleName,
+                LastName = customerDTO.LastName,
+                Email = customerDTO.Email,
+                LoginName = customerDTO.Username,
+                LoginPassword = password.ToString(),
+                PhoneNumber = customerDTO.PhoneNumber,
+                AddressLine1 = customerDTO.PrimaryAddress,
+                AddressLine2 = customerDTO.SecondaryAddress,
+                AddressLine3 = customerDTO.AuxiliaryAddress1,
+                AddressLine4 = customerDTO.AuxiliaryAddress2,
+                TownCity = customerDTO.TownCity,
+                County = customerDTO.County,
+                Country = customerDTO.Country
+            };
+            await this.repository.UpdateCustomer(updatedCustomer);
+
+            return NoContent();
+
+        }
     }
 }
