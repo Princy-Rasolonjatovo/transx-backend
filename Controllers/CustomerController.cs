@@ -24,7 +24,7 @@ namespace transx.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<CustomerDTO>> GetCustomer(string username){
             try{
-                var customer = await this.repository.GetCustomer(username);
+                var customer = await this.repository.GetCustomerByLoginName(username);
                 if (customer is null){
                     return NotFound();
                 }
@@ -66,6 +66,20 @@ namespace transx.Controllers
                     County = customerDTO.County,
                     Country = customerDTO.Country
                 };
+                // TODO change cust0, cust1 request to a lambda expression
+                // check email 
+                var cust0 = await this.repository.GetCustomerByEmail(customerDTO.Email);
+                if (cust0 is not null){
+                    ModelState.AddModelError("Email", "Email already in use by another user");
+                    return BadRequest(ModelState);
+                }
+                // check username
+                var cust1 = await this.repository.GetCustomerByLoginName(customerDTO.Username);
+                if(cust1 is not null){
+                    ModelState.AddModelError("Username", "Username already in use by another user");
+                    return BadRequest(ModelState);
+                }
+
                 var createdCustomer = await this.repository.CreateCustomer(customer);
 
                 return CreatedAtAction(nameof(GetCustomer), 

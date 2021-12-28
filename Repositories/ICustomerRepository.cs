@@ -9,10 +9,11 @@ namespace transx.Repositories
     {
         Task<Customer> CreateCustomer(Customer customer);
         void DeleteCustomer(Guid id);
-        Task<Customer> GetCustomer(Guid Id);
+        Task<Customer> GetCustomerById(Guid Id);
 
-        Task<Customer> GetCustomer(string LoginName);
-        // Task<IEnumerable<Customer>> GetCustomers();
+        Task<Customer> GetCustomerByLoginName(string LoginName);
+        Task<Customer> GetCustomerByEmail(string email);
+
         Task<Customer> UpdateCustomer(Customer customer);
     }
 }

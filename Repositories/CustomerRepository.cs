@@ -22,19 +22,31 @@ namespace transx.Repositories
         //     return await shipmentContext.Customers.ToListAsync();
         // }
 
-        public async Task<Customer> GetCustomer(Guid Id)
+        public async Task<Customer> GetCustomerById(Guid Id)
         {
             return await this.shipmentContext.Customers
                 .FirstOrDefaultAsync(cust => cust.Id == Id);
         }
+        public async Task<Customer> GetCustomerByLoginName(string LoginName)
+        {
+            var customer = await this.shipmentContext.Customers
+                .FirstOrDefaultAsync(cust => cust.LoginName == LoginName);
 
+            return customer;
+        }
+        public async Task<Customer> GetCustomerByEmail(string email){
+            var customer = await this.shipmentContext.Customers
+            .FirstOrDefaultAsync(cust => cust.Email == email);
+
+            return customer;
+        }
         public async Task<Customer> CreateCustomer(Customer customer)
         {
             var ret = await this.shipmentContext.Customers.AddAsync(customer);
             await this.shipmentContext.SaveChangesAsync();
             return ret.Entity;
         }
-
+        
         public async Task<Customer> UpdateCustomer(Customer customer)
         {
             var ret = await this.shipmentContext.Customers
@@ -61,12 +73,6 @@ namespace transx.Repositories
             }
         }
 
-        public async Task<Customer> GetCustomer(string LoginName)
-        {
-            var customer = await this.shipmentContext.Customers
-                .FirstOrDefaultAsync(cust => cust.LoginName == LoginName);
-
-            return customer;
-        }
+        
     }
 }
