@@ -56,9 +56,8 @@ namespace transx
             }
 
             // ensure database is created
-            var Database = app.ApplicationServices.GetRequiredService<ShipmentContext>();
-            Database.Database.EnsureCreated();
-
+            // var Database = app.ApplicationServices.GetRequiredService<ShipmentContext>();
+            // Database.Database.EnsureCreated();
 
             app.UseHttpsRedirection();
 
@@ -70,6 +69,7 @@ namespace transx
             {
                 endpoints.MapControllers();
             });
+            
         }
     }
 }

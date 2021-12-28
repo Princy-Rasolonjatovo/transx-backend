@@ -21,7 +21,7 @@ namespace transx.Controllers
         }
 
         /// GET customers/{username}
-        [HttpGet("{username:string}")]
+        [HttpGet("{username}")]
         public async Task<ActionResult<CustomerDTO>> GetCustomer(string username){
             try{
                 var customer = await this.repository.GetCustomer(username);
