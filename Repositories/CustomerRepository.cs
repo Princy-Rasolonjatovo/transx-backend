@@ -60,5 +60,13 @@ namespace transx.Repositories
                 await this.shipmentContext.SaveChangesAsync();
             }
         }
+
+        public async Task<Customer> GetCustomer(string LoginName)
+        {
+            var customer = await this.shipmentContext.Customers
+                .FirstOrDefaultAsync(cust => cust.LoginName == LoginName);
+
+            return customer;
+        }
     }
 }
