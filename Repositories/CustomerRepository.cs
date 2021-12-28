@@ -62,10 +62,10 @@ namespace transx.Repositories
             return ret;
         }
 
-        public async void DeleteCustomer(Guid id)
+        public async void DeleteCustomer(Customer customer)
         {
             var ret = await this.shipmentContext.Customers
-                .FirstOrDefaultAsync(cust => cust.Id == id);
+                .FirstOrDefaultAsync(cust => cust.Id == customer.Id);
             if (ret is not null)
             {
                 this.shipmentContext.Customers.Remove(ret);

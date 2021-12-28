@@ -93,7 +93,7 @@ namespace transx.Controllers
             }
         }
 
-        [HttpPut("{username: string}")]
+        [HttpPut("{username}")]
         public async Task<ActionResult> UpdateCustomer(string username, UpdatedCustomerDTO customerDTO){
             var customer = await this.repository.GetCustomerByLoginName(username);
             
@@ -139,6 +139,19 @@ namespace transx.Controllers
 
             return NoContent();
 
+        }
+
+        //! Warning: Need to add credentials
+        [HttpDelete("{username}")]
+        public async Task<ActionResult> DeleteCustomer(string username){
+            var customer = await this.repository.GetCustomerByLoginName(username);
+            if (customer is null){
+                return NotFound();
+            }
+            
+            this.repository.DeleteCustomer(customer);
+
+            return NoContent();
         }
     }
 }

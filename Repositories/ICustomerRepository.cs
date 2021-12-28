@@ -8,7 +8,7 @@ namespace transx.Repositories
     public interface ICustomerRepository
     {
         Task<Customer> CreateCustomer(Customer customer);
-        void DeleteCustomer(Guid id);
+        void DeleteCustomer(Customer customer);
         Task<Customer> GetCustomerById(Guid Id);
 
         Task<Customer> GetCustomerByLoginName(string LoginName);
