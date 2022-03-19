@@ -14,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using transx.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using transx.Repositories;
+using transx.Helpers;
+using transx.Services;
 
 namespace transx
 {
@@ -33,16 +35,24 @@ namespace transx
                     options.UseMySql(Configuration.GetConnectionString("MariaDB"), MariaDbServerVersion.LatestSupportedServerVersion);
                 } 
             );
-
-            // Add the repositories
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-
-
+            
+            
+            
+            // enable cross origin
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "transx", Version = "v1" });
             });
+
+            // configure strongly typed setting objects
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            // Add the repositories
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IUserService, UserService>();
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,9 +69,22 @@ namespace transx
             // var Database = app.ApplicationServices.GetRequiredService<ShipmentContext>();
             // Database.Database.EnsureCreated();
 
+
+
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // enable Cross origin
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            );
+
+            // add jwt authentication middleware
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseAuthorization();
 

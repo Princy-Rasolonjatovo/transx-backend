@@ -11,11 +11,7 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "publish",
@@ -36,9 +32,8 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/transx.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "--project",
+                "${workspaceFolder}/transx.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

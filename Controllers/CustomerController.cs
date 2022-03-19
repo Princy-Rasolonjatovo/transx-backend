@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 using transx.DTOs;
 using transx.Models;
 using transx.Repositories;
+using transx.Services;
 using transx.Utilities;
 
 namespace transx.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("customers")]
     public class CustomerController: ControllerBase {
         private readonly ICustomerRepository repository;
-
-        public CustomerController(ICustomerRepository repository){
+        private readonly IUserService userService;
+        public CustomerController(ICustomerRepository repository, IUserService userService){
             this.repository = repository;
+            this.userService = userService;
         }
 
         /// GET customers/{username}
@@ -39,6 +42,27 @@ namespace transx.Controllers
             }
         }
 
+        [Route("authenticate/")]
+        [HttpPost]
+        public async Task<ActionResult<UserAuthenticationResponseDTO>> Authenticate([FromBody] UserAuthenticationRequestDTO user)
+        {
+            try
+            {
+                UserAuthenticationResponseDTO customer = await this.userService.Authenticate(user);
+                if (customer is null)
+                {
+                    return  StatusCode (StatusCodes.Status401Unauthorized, "Wrong Credentials");
+                }
+                
+                return Ok(customer);
+
+            }catch(Exception){
+                return StatusCode (
+                    StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database"
+                );
+            }
+        }
         /// POST customers/{customerDTO}
         [HttpPost]
         public async Task<ActionResult<CustomerDTO>> CreateCustomer(CreateCustomerDTO customerDTO){

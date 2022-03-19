@@ -2,7 +2,8 @@ using System;
 
 namespace transx.DTOs
 {
-     public record CustomerDTO{
+     public record CustomerDTO
+     {
 
         public Guid Id { get; init;}
         // organisation: true; person: false

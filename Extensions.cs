@@ -1,6 +1,7 @@
 using transx.DTOs;
 using transx.Models;
 
+
 namespace transx
 {
     public static class Extensions{
@@ -25,6 +26,16 @@ namespace transx
                 TownCity = customer.TownCity, 
                 County = customer.County,
                 Country = customer.Country,
+            };
+        }
+
+        public static UserAuthenticationResponseDTO AsUserAuthenticationResponseDTO(this Customer customer, string token)
+        {
+            return new UserAuthenticationResponseDTO
+            {
+                Id= customer.Id,
+                Username = customer.LoginName,
+                Token = token
             };
         }
     }
